@@ -12,6 +12,7 @@
 </head>
 <body>
 <a href="index/index">test 主页</a> <br>
-<a href="index/login">test 登录页</a>
+<a href="index/login">test 登录页</a><br>
+<a href="index/orderDetail">test 订单详情页</a>
 </body>
 </html>

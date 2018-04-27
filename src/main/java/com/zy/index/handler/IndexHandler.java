@@ -16,4 +16,9 @@ public class IndexHandler {
         System.out.println("转到登录页！");
         return "index/login";
     }
+    @RequestMapping("/orderDetail")
+    public String orderDetail(){
+        System.out.println("转到订单详情页！");
+        return "customer/orderDetail";
+    }
 }
