@@ -1,4 +1,4 @@
-package com.zy.customer.pojo;
+package com.zy.customer.entity;
 
 public class Customer {
     int id;

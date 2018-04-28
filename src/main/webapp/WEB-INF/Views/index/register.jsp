@@ -190,7 +190,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             
 <div class="delivery-city">
     <div class="dropdown csqh">
-        欢迎注册
+        欢迎${identity}注册
     </div>
 </div>
 

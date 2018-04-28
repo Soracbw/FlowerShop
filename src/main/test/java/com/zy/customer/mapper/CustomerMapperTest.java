@@ -1,6 +1,6 @@
 package com.zy.customer.mapper;
 
-import com.zy.customer.pojo.Customer;
+import com.zy.customer.entity.Customer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;

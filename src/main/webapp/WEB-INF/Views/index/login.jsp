@@ -251,7 +251,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             
 <div class="delivery-city">
     <div class="dropdown csqh">
-        欢迎登录
+        欢迎${identity}登录
     </div>
 </div>
 

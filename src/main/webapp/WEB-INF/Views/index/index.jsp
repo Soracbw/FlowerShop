@@ -151,7 +151,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <ul class="site-nav-r">
                 <!--登陆状态信息显示start-->
                 <li class="menu login" id="LoginInfo">
-                    <a href="/Passport/Login/" rel="nofollow" id="btn-login">你好，请登录</a><a href="/Passport/Register/" rel="nofollow" id="btn-reg">注册</a>
+                    <a href="login?identity=customer" rel="nofollow" id="btn-login">你好，请登录</a><a href="register?identity=customer" rel="nofollow" id="btn-reg">注册</a>
                 </li>
                 <!--登陆状态信息显示end-->
                 <li class="site-nav-pipe">|</li>
@@ -161,19 +161,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <li class="site-nav-pipe">|</li>
                 <!--我的花礼信息显示start-->
                 <li class="menu dropdown">
-                    <a href="/member/" rel="nofollow" data-hover="dropdown" data-delay="0" target="_blank">我的花礼</a>
+                    <a href="login?identity=seller" rel="nofollow" data-hover="dropdown" data-delay="0" target="_blank">商家登录</a>
                 </li><!--我的花礼信息显示end-->
                 <li class="site-nav-pipe">|</li>
                 <li class="menu dropdown">
-                    <a href="/help/" data-hover="dropdown" data-delay="0" target="_blank">客户服务<span class="glyphicon glyphicon-triangle-bottom"></span></a>
-                    <div class="dropdown-menu dropdown-service">
-                        <a href="/member/payment/balancefill" target="_blank">在线付款</a>
-                        <a href="/help/" target="_blank">帮助中心</a>
-                        <a href="/help/afterservice.htm" target="_blank">售后服务</a>
-                        <a href="/help/sendRange.htm" target="_blank">配送范围</a>
-                        <a href="/chat/" target="_blank">留言反馈</a>
-                    </div>
-                </li>
+                    <a href="register?identity=seller" rel="nofollow" data-hover="dropdown" data-delay="0" target="_blank">商家入驻</a>
+                </li><!--我的花礼信息显示end-->
+                <li class="site-nav-pipe">|</li>
                 <li class="site-nav-pipe">|</li>
                 <!--购物车信息显示start-->
                 <li class="menu dropdown">
