@@ -11,7 +11,7 @@
 - **在线预览**： [暂无]()。
 
 #### 数据库模型
-![image](https://github.com/Mrzyang/FlowerShop/blob/master/src/main/webapp/assets/FSimg/github/FlowerShop.png)
+![image](https://github.com/Mrzyang/FlowerShop/blob/master/src/main/webapp/assets/FSimg/FlowerShop.png)
 
 #### 项目预览：待续...
 
