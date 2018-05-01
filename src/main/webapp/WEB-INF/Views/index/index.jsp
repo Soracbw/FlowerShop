@@ -1,4 +1,5 @@
 ﻿<%@ page language="java" pageEncoding="utf-8" contentType="text/html;charset=UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -51,7 +52,6 @@
             }
     	}
     </style>
-    <script type="text/javascript" src="../assets/Scripts/a7b6e458928c4ba4bd7becd1307da78f.js"></script>
     <link rel="icon" href="/favicon.ico" mce_href="/favicon.ico" type="image/x-icon">
     <link type="text/css" rel="stylesheet" href="../assets/Css/common.css">
     <link type="text/css" rel="stylesheet" href="../assets/Css/public.css">
@@ -151,7 +151,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <ul class="site-nav-r">
                 <!--登陆状态信息显示start-->
                 <li class="menu login" id="LoginInfo">
-                    <a href="login?identity=customer" rel="nofollow" id="btn-login">你好，请登录</a><a href="register?identity=customer" rel="nofollow" id="btn-reg">注册</a>
+
+                    <c:if test="${sessionScope.seller==null}">
+                    <c:if test="${sessionScope.customer!=null}">
+                        <a href="${pageContext.request.contextPath}/customer/home" rel="nofollow" id="btn-login">${sessionScope.customer}</a>
+                        <a href="logout?identity=customer" rel="nofollow" id="btn-login">注销</a>
+                    </c:if>
+                    <c:if test="${sessionScope.customer==null}">
+                        <a href="login?identity=customer" rel="nofollow" id="btn-login">你好，请登录</a><a href="register?identity=customer" rel="nofollow" id="btn-reg">注册</a>
+                    </c:if>
+                    </c:if>
+
                 </li>
                 <!--登陆状态信息显示end-->
                 <li class="site-nav-pipe">|</li>
@@ -160,14 +170,28 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </li>
                 <li class="site-nav-pipe">|</li>
                 <!--我的花礼信息显示start-->
+                <c:if test="${sessionScope.customer==null}">
+                <c:if test="${sessionScope.seller!=null}">
+                    <li class="menu dropdown">
+                        <a href="${pageContext.request.contextPath}/seller/home" rel="nofollow">${sessionScope.seller}</a>
+                    </li>
+                    <li class="menu dropdown">
+                        <a href="logout?identity=seller" rel="nofollow">注销</a>
+                    </li>
+                </c:if>
+                </c:if>
+
+                <c:if test="${sessionScope.seller==null}">
                 <li class="menu dropdown">
-                    <a href="login?identity=seller" rel="nofollow" data-hover="dropdown" data-delay="0" target="_blank">商家登录</a>
-                </li><!--我的花礼信息显示end-->
+                    <a href="login?identity=seller" rel="nofollow" >商家登录</a>
+                </li>
+                </c:if>
+
                 <li class="site-nav-pipe">|</li>
                 <li class="menu dropdown">
                     <a href="register?identity=seller" rel="nofollow" data-hover="dropdown" data-delay="0" target="_blank">商家入驻</a>
                 </li><!--我的花礼信息显示end-->
-                <li class="site-nav-pipe">|</li>
+                <%--<li class="site-nav-pipe">|</li>--%>
                 <li class="site-nav-pipe">|</li>
                 <!--购物车信息显示start-->
                 <li class="menu dropdown">
@@ -1684,8 +1708,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             
         });
     </script>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="../assets/Scripts/9beb9a3765124a9dba6368c3fab8063f.js"></script>
     <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}

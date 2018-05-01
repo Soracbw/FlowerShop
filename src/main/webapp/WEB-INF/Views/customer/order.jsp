@@ -60,7 +60,7 @@
             </ul>
             <ul class="site-nav-r">
                 <!--登陆状态信息显示start-->
-                <li class="menu login" id="LoginInfo"><a href="https://www.hua.com/Member/MemberCenter/" rel="nofollow">你好，张洋</a><a href="https://www.hua.com/Passport/Login/Loginout" title="退出">退出</a></li>
+                <li class="menu login" id="LoginInfo">${sessionScope.customer}<a href="https://www.hua.com/Passport/Login/Loginout" title="退出">退出</a></li>
                 <!--登陆状态信息显示end-->
                 <li class="site-nav-pipe">|</li>
                 <li class="menu">

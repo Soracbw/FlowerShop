@@ -1,4 +1,5 @@
 ﻿<%@ page language="java" pageEncoding="utf-8" contentType="text/html;charset=UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -251,7 +252,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             
 <div class="delivery-city">
     <div class="dropdown csqh">
-        欢迎${identity}登录
+        欢迎<c:if test='${identity=="customer"}'>顾客</c:if>
+        <c:if test='${identity=="seller"}'>商家</c:if>
+        <c:if test='${identity=="admin"}'>管理员</c:if>登录
+
     </div>
 </div>
 
@@ -273,9 +277,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </div>
     </header>
     <!-- 头部 End -->
-    
-
-
 
 <div class="login-wrapper">
     <div class="container">
@@ -288,7 +289,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <!-- 登录/注册tab End -->
             <a href="javascript:void(0);" class="logMethod">使用手机验证码登录</a><div style="clear:both;"></div>
             <form name="myForm" id="myForm" action="/Passport/Login/" method="post" style="display:block;">
-
+                <!--不同身份在不同数据库中查询-->
+                <input type="hidden" name="identity" value="${identity}">
                 <div class="tab-content">
                     <!-- 普通登录 -->
                     <div id="loginPane" class="tab-pane login-panel fade in active">
@@ -318,20 +320,18 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                         <div class="checkbox">
                             <input type="hidden" name="DoIt" value="ok" />
                             <input type="hidden" id="backUrl" name="backUrl" value="/" />
-                            <label style="display:none;">
-                                <input type="checkbox" name="autologin" id="autologin" onClick="ShowAutoLogin()" value="1"> 一个月内自动登录
-                            </label>
                             <a class="pull-right" href="/Member/Password/Forgot" target="_blank">忘记密码？</a>
                         </div>
 
-                        <button class="btn btn-primary btn-lg btn-block" type="button" onClick="return Check_User_Login()" id="dosubmit">登　录</button>
-                        <button class="btn btn-primary btn-lg btn-block" type="button" disabled="disabled" style="display:none;" id="submiting">登录中...</button>
+                        <button class="btn btn-primary btn-lg btn-block" type="button"  onclick="normalLogin()" id="dosubmit">登　录</button>
                     </div>
                     <!-- 普通登录 End -->
                 </div>
             </form>
             <!-- 手机号获取验证码登录 begin-->
             <form id="myForm2" action="" method="post" style="display:none;">
+                <!--不同身份在不同数据库中查询-->
+                <input type="hidden" name="identity" value="${identity}" id="identity">
                 <div>
                     <div class="login-panel">
                         <div class="login-notice" id="phoneErr">
@@ -343,37 +343,19 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                 <div class="phoneNum"><input name="phone" id="phone" autocomplete="off" placeholder="手机号" type="text"></div>
                             </div>
                         </div>
-                        <div class="form-group verify" id="picCode" style="display:none;">
-                            <input type="text" name="phoneLoginValidCode" id="phoneLoginValidCode" class="form-control" placeholder="验证码">
-                            <a href="javascript:RefreshImage('imgCaptcha');"><img src="" id="imgCaptcha" height="25" width="100"></a>
-                            <a class="refresh" href="javascript:RefreshImage('imgCaptcha');">看不清,换一张</a>
-                        </div>
                         <div class="form-group">
                             <label class="sr-only" for="">短信验证码</label>
                             <div class="input-group">
                                 <div class="input-group-addon"><span class="ico ico-lock"></span></div>
                                 <div class="SMScodes"><input name="phoneCode" id="phoneCode" maxlength="6" autocomplete="off" placeholder="短信验证码" type="text" disabled="disabled"></div>
-                                <button type="button" class="btnSend" id="getcode">获取验证码</button>
-                                <div id="prompt_info" style="display:none;"><span id="regetcode">90</span>秒后重新发送</div>
+                                <button type="button" class="btnSend" id="getcode" onclick="sendPhoneCode()">获取验证码</button>
                             </div>
                         </div>
-                        <button class="btn btn-primary btn-lg btn-block" type="button" disabled="disabled" id="sumbit_btn" onClick="CheckPhoneLogin();">登　录</button>
+                        <button class="btn btn-primary btn-lg btn-block" type="button" disabled="disabled" id="sumbit_btn" onClick="loginByPhone()">登　录</button>
                     </div>
                 </div>
             </form>
             <!--手机号获取验证码登录 end-->
-            <div class="other-login-ways">
-                <ul>
-                    <li><a href="javascript:;" onclick="WXLogin()" class="wx_login">微信</a><span class="line">|</span></li>
-                    <li><a href="/Passport/QQ/Login" title="QQ快捷登录" target="_blank">QQ</a><span class="line">|</span></li>
-                    <li><a href="/Passport/Alipay/Login" title="支付宝快捷登录" target="_blank">支付宝</a></li>
-                </ul>
-                <div class="login_q">
-                    <span class="wx_kuaijie" style="">上次使用微信快捷登录</span>
-                    <span class="qq_kuaijie" style="">上次使用QQ快捷登录</span>
-                    <span class="zfb_kuaijie" style="">上次使用支付宝快捷登录</span>
-                </div>
-            </div>
         </div>
     </div>
 </div>
@@ -425,488 +407,100 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     
     <script src="../assets/Scripts/mailautocomplete.js"></script>
     <script language="javascript">
-        //窗口操作开始
-        $('#passwordModal').modal({ backdrop: 'static', keyboard: false, show: false });
-        $('#passwordModal').on('shown.bs.modal', function () {
-            var $this = $(this);
-            var $modal_dialog = $this.find('.modal-dialog');
-            $this.css('display', 'block');
-            $modal_dialog.css({ 'margin-top': Math.max(0, ($(window).height() - $modal_dialog.height()) / 2) });
-        });
-        $('#passwordModal').on('hidden.bs.modal', function () {
-            $("#attPage").attr("src", "");
-        });
+        
 
-        function DoValidPhone(phone) {
-            $('#passwordModal').modal('show');
-            $("#attPage").attr('src', '/Passport/Login/ValidPhone?phone=' + phone + "&ReturnUrl=" + $("#backUrl").val());
-        }
-
-        function RefreshImage(valImageId) {
-            var objImage = document.getElementById(valImageId)
-            if (objImage == undefined) {
+        $(".logMethod").click(function () {
+            if ($(this).text() == "使用账号密码登录") {
+                $(this).text("使用手机验证码登录");
+                $("#myForm").show();
+                $("#myForm2").hide();
+            } else {
+                $(this).text("使用账号密码登录");
+                $("#myForm").hide();
+                $("#myForm2").show();
+                SetPlaceHolder();
+            }
+        });
+        function normalLogin() {
+            if(!$('#UserName').val()){
+                alert("请输入手机号或者邮箱！");
                 return;
             }
-            var now = new Date();
-            objImage.src = '/Passport/Login/BaseImageValidCode?x=' + now.toUTCString();
-        }
-
-        //窗口操作结束
-        function Check_Email() {
-            HideTips();
-            var Email = document.getElementById("UserName");
-            if (document.getElementById("UserName").value.length < 1) {
-                ShowTips("请输入你的Email地址或手机号码");
-                return false;
-            } else if (!/^[\w-]+(\.[\w-]+)*@[\w-]+(\.(\w)+)*(\.(\w){2,3})$/.test(document.getElementById("UserName").value) && !(/^\s*1\d{10}\s*$/gi).test(document.getElementById("UserName").value)) {
-                ShowTips("请输入有效的Email地址或手机号码");
-                return false;
+            if(!$('#PassWord').val()){
+                alert("请输入密码！");
+                return;
             }
-            return true;
-        }
-
-        function Check_Password() {
-            HideTips();
-            var Password = document.getElementById("PassWord");
-            if (Password.value.length < 6) {
-                ShowTips("请输入密码，密码不能小于6位！");
-                return false;
-            }
-            return true;
-        }
-
-        function Check_Code() {
-            HideTips();
-            var ValidCode = document.getElementById("ValidCode");
-
-            if ($("#ValidCode").attr("display") == "block" && ValidCode.value.length < 4) {
-                ShowTips("请输入验证码，验证码应等于4位！");
-                return false;
-            }
-
-            return true;
-        }
-
-        //提交再次验证
-        function Check_User_Login() {
-            HideTips();
-            var code = document.getElementById("ValidCode").value;
-            var mail = document.getElementById("UserName").value;
-            var pwd = document.getElementById("PassWord").value;
-
-            $("#dosubmit").hide();
-            $("#submiting").show();
-            if (!Check_Email() && !(/^\s*1\d{10}\s*$/gi).test(mail)) {
-                ShowTips("请输入有效的Email地址或手机号码");
-                $("#submiting").hide();
-                $("#dosubmit").show();
-                return false;
-            }
-
-            if (!Check_Password()) {
-                $("#submiting").hide();
-                $("#dosubmit").show();
-                return false;
-            }
-            if (!Check_Code()) {
-                $("#submiting").hide();
-                $("#dosubmit").show();
-                return false;
-            }
-            if ((/^\s*1\d{10}\s*$/gi).test(mail)) {
-                document.getElementById("PassWord").value = encode64(pwd);
-                //mail为手机号
-                var rmd = Math.random();
-                $.ajax({
-                    type: "GET",
-                    url: "/Passport/Login/IsValidPhone",
-                    data: "mail=" + mail + "&pwd=" + pwd + "&rmd=" + rmd,
-                    async: false,
-                    success: function (data) {
-                        if (data == "1") {
-                            DoValidPhone(mail);
-                            $("#submiting").hide();
-                            $("#dosubmit").show();
-                            return false;
-                        }
-                        else if (data == "-1") {
-                            ShowTips("你输入的登录名或者密码错误");
-                            $("#submiting").hide();
-                            $("#dosubmit").show();
-                            return false;
-                        }
-                        else {
-                            $("#myForm").submit();
-                        }
-                    }
-                });
-            }
-            else {
-                document.getElementById("PassWord").value = encode64(pwd);
-                // 输入的是邮箱就直接提交表单
-                $("#myForm").submit();
-            }
-
-        }
-
-        function ShowTips(nr) {
-            $("#Enr").html("<div class=\"notice-cont\"><span class=\"ico ico-notice\"></span>" + nr + "</div>");
-        }
-
-        function HideTips() {
-            $("#Enr").html("");
-        }
-
-        function ShowAutoLogin() {
-            if ($("#autologin").is(":checked")) {
-                ShowTips("公共场所不建议自动登录,以防账号丢失");
-            }
-            else {
-                HideTips();
-            }
-        }
-
-        function SetPlaceHolder() {
-            var oForm1 = document.getElementById("myForm");
-            if ($("#myForm").is(":hidden"))
-            {
-                oForm1 = document.getElementById("myForm2");
-            }
-            var oForm1Inputs = oForm1.getElementsByTagName('input');
-            for (var i = 0; i < oForm1Inputs.length; i++) {
-                placeHolder(oForm1Inputs[i], true);
-            }
-        }
-
-        function placeHolder(obj, span) {
-            if (!obj.getAttribute('placeholder')) return;
-            var imitateMode = span === true ? true : false;
-            var supportPlaceholder = 'placeholder' in document.createElement('input');
-            if (!supportPlaceholder) {
-                var defaultValue = obj.getAttribute('placeholder');
-                if (!imitateMode) {
-                    obj.onfocus = function () {
-                        (obj.value == defaultValue) && (obj.value = '');
-                        obj.style.color = '';
-                    }
-                    obj.onblur = function () {
-                        if (obj.value == defaultValue) {
-                            obj.style.color = '';
-                        } else if (obj.value == '') {
-                            obj.value = defaultValue;
-                            obj.style.color = '#A6A6A6';
-                        }
-                    }
-                    obj.onblur();
-                } else {
-                    var placeHolderCont = document.createTextNode(defaultValue);
-                    var oWrapper = document.createElement('span');
-                    oWrapper.style.cssText = 'position:absolute; color:#A6A6A6; display:inline-block; overflow:hidden;';
-                    oWrapper.className = 'wrap-placeholder';
-                    oWrapper.style.fontFamily = getStyle(obj, 'fontFamily');
-                    oWrapper.style.fontSize = getStyle(obj, 'fontSize');
-                    oWrapper.style.marginLeft = parseInt(getStyle(obj, 'marginLeft')) ? parseInt(getStyle(obj, 'marginLeft')) + 3 + 'px' : 3 + 'px';
-                    oWrapper.style.marginTop = parseInt(getStyle(obj, 'marginTop')) ? getStyle(obj, 'marginTop') : 1 + 'px';
-                    oWrapper.style.paddingLeft = getStyle(obj, 'paddingLeft');
-                    oWrapper.style.width = obj.offsetWidth - parseInt(getStyle(obj, 'marginLeft')) + 'px';
-                    oWrapper.style.height = obj.offsetHeight + 'px';
-                    oWrapper.style.lineHeight = obj.nodeName.toLowerCase() == 'textarea' ? '' : obj.offsetHeight + 'px';
-                    oWrapper.appendChild(placeHolderCont);
-                    obj.parentNode.insertBefore(oWrapper, obj);
-                    oWrapper.onclick = function () {
-                        obj.focus();
-                    }
-
-                    changeHandler();
-
-                    if (typeof (obj.oninput) == 'object') {
-                        obj.addEventListener("input", changeHandler, false);
+            $.ajax({
+                type: 'post',
+                dataType: 'json',
+                data: $('#myForm').serialize(),
+                url: 'checkLogin',
+                success: function (msg) {
+                    if (msg.status == 1) {
+                        layer.msg(msg.data);
+                        if($('#identity').val()=="admin")
+                            window.setTimeout("window.location.href='../admin/home'", 1000);
+                        else
+                        window.setTimeout("window.location.href='index'", 1000);
                     } else {
-                        obj.onpropertychange = changeHandler;
-                    }
-                    function changeHandler() {
-                        oWrapper.style.display = obj.value != '' ? 'none' : 'inline-block';
-                    }
-
-                    function getStyle(obj, styleName) {
-                        var oStyle = null;
-                        if (obj.currentStyle)
-                            oStyle = obj.currentStyle[styleName];
-                        else if (window.getComputedStyle)
-                            oStyle = window.getComputedStyle(obj, null)[styleName];
-                        return oStyle;
+                        layer.msg(msg.data);
                     }
                 }
-            }
+            });
         }
-
-        $("#UserName").change(function () {
-            placeHolder(this, true);
-        });
-
-        //回车键
-        document.onkeydown = function (event) {
-            var e = event || window.event || arguments.callee.caller.arguments[0];
-            if (e && e.keyCode == 13) {
-                var isFocus = $("#UserName").is(":focus");
-                if (isFocus) {
-                    $("#PassWord").focus();
-                    return false;
-                }
-                else {
-                    Check_User_Login();
-                }
-            }
-        };
         //********************手机验证码登录逻辑begin********************
-        var interval = null
-        var counter = 0;
-        $(function () {
-            SetPlaceHolder();
-            $(".logMethod").click(function () {
-                if ($(this).text() == "使用账号密码登录") {
-                    $(this).text("使用手机验证码登录");
-                    $("#myForm").show();
-                    $("#myForm2").hide();
-                } else {
-                    $(this).text("使用账号密码登录");
-                    $("#myForm").hide();
-                    $("#myForm2").show();
-                    SetPlaceHolder();
-                }
-            });
-
-            $("#getcode").click(function () {
-                $("#phoneErr").hide();
-                if ($("#phone").val().length < 11) {
-                    $("#phoneErr").html("<div class=\"notice-cont\"><span class=\"ico ico-notice\"></span>请输入手机号</div>").show();
-                    return;
-                }
-                if (!($("#phoneLoginValidCode").is(":hidden")) && ($("#phoneLoginValidCode").val().length < 2)) {
-                    $("#phoneErr").html('请输入图片验证码').show();
-                    return;
-                }
-                var phone = $("#phone").val();
-                var imgCode = $("#phoneLoginValidCode").val();
-                $.ajax({
-                    type: "post",
-                    url: "/Passport/Login/SendPhoneLoginSMSCode",
-                    data: { phone: phone, imgCode: imgCode },
-                    async: false,
-                    success: function (data) {
-                        if (data.Code == "1") {
-                            $("#phoneErr").html("<div class=\"notice-cont\"><span class=\"ico ico-notice\"></span>验证码已发送请查收</div>").show();;
-                            counter = 0;
-                            $("#getcode").hide();
-                            $("#regetcode").html("90");
-                            $("#prompt_info").show();
-                            $("#sumbit_btn").removeAttr("disabled");
-                            $("#phoneCode").removeAttr("disabled");
-                            interval = window.setInterval(intervalFunc, 1000);
-                        }
-                        else if (data.Code == "-3") {
-                            $("#picCode").show();
-                            $("#phoneErr").html("<div class=\"notice-cont\"><span class=\"ico ico-notice\"></span>图片验证码输入错误，请重新输入</div>").show();
-                            RefreshImage('imgCaptcha');
-                            $("#phoneLoginValidCode").focus();
-                        }
-                        else if (data.Code == "-4") {
-                            $("#phoneErr").html("<div class=\"notice-cont\"><span class=\"ico ico-notice\"></span>发送太频繁，请稍后重试</div>").show();
-                        }
-                        else if (data.Code == "-6") {
-                            $("#phoneErr").html("<div class=\"notice-cont\"><span class=\"ico ico-notice\"></span>手机号码格式不正确，请稍后重试</div>").show();
-                        }
-                        else if (data.Code == "-12") {
-                            $("#phoneErr").html("<div class=\"notice-cont\"><span class=\"ico ico-notice\"></span>请输入图片验证码</div>").show();
-                            $("#picCode").show();
-                            RefreshImage('imgCaptcha');
-                            $("#phoneLoginValidCode").focus();
-                        }
-                        else if (data.Code == "-5") {
-                            $("#phoneErr").html("<div class=\"notice-cont\"><span class=\"ico ico-notice\"></span>你输入的手机号还没有注册，请注册 <a href='/Passport/Register/'></a></div>").show();
-                        }
-                        else {
-                            $("#phoneErr").html("<div class=\"notice-cont\"><span class=\"ico ico-notice\"></span>获取失败，请联系客服处理</div>").show();
-                        }
-                    }
-                });
-            });
-        });
-
-        function intervalFunc() {
-            if (counter > 90) {
-                counter = 0;
-                $("#getcode").show();
-                $("#prompt_info").hide();
-                window.clearInterval(interval);
-            } else {
-                $("#regetcode").html((90 - counter).toString());
+        function sendPhoneCode() {
+            var  phone=$('#phone').val();
+            var identity=$('#identity').val();
+            if(!phone){
+                alert("请先输入你的手机号!");
+                return;
             }
-            counter = counter + 1;
+            $.post("/index/getPhoneCodeOnLogin",{phone: phone, identity: identity},function (msg) {
+                if(msg.status==1){
+                    $("#phone").attr("readonly", "readonly");
+                    $("#phoneCode").removeAttr("disabled");
+                    $("#sumbit_btn").removeAttr("disabled");
+                }
+                layer.msg(msg.data);
+            },'json')
         }
-        function CheckPhoneLogin() {
-            $("#phoneErr").hide();
-            if ((/^\d{6}$/gi).test($("#phoneCode").val()) == false) {
-                $("#phoneErr").html("<div class=\"notice-cont\"><span class=\"ico ico-notice\"></span>请输入正确的短信验证码</div>").show();
-                return false;
+        function loginByPhone() {
+            var phone=$('#phone').val();
+            var phoneCode=$('#phoneCode').val();
+            if(!phone){
+                alert("请输入手机号！");
+                return;
             }
-            var phone = $("#phone").val();
-            var code = $("#phoneCode").val();
+            if(!phoneCode){
+                alert("请输入验证码！");
+                return;
+            }
             $.ajax({
-                type: "post",
-                url: "/Passport/Login/PhoneValidCodeLogin/",
-                data: {
-                    phone: phone,
-                    code: code
-                },
-                datatype: 'json',
-                async: false,
-                success: function (data) {
-                    if (data.OK) {
-                        var backUrl = $("#backUrl").val();
-                        if (backUrl.length > 2) {
-                            location.href = backUrl;
-                        }
-                        else {
-                            location.href = "/Member/MemberCenter/";
-                        }
-                    }
-                    else {
-                        $("#phoneErr").html("<div class=\"notice-cont\"><span class=\"ico ico-notice\"></span>" + data.Msg + "</div>").show();
-                    }
-
-                }
-            });
-        }
-        //********************手机验证码登录逻辑 end********************
-        function WXLogin()
-        {
-            var qrCodeUrl = "https://m.hua.com/wxapi/tempqrpic?pid=3eadd9119ae1423ba90c0b50c0176859&userid=&type=8&sj=2018-4-26&sign=a1aa8a0a3936a6b3";
-            layer.open({
-                type: 1,
-                title: false,
-                closeBtn: 0,
-                shadeClose: true,
-                skin: 'yourclass',
-                content: '<style>.impowerBox .title{text-align: center;font-size: 20px;margin-top:15px;}.impowerBox .qrcode{width: 280px;margin-top: 15px;}.impowerBox{text-align: center;}</style><div class="main impowerBox"><div class="loginPanel normalPanel"><div class="title">微信登录</div><div class="waiting panelContent"><div class="wrp_code"><img class="qrcode lightBorder" id="wxLoginQR" src="" /></div><div class="info"><div class="status status_browser js_status" id="wx_default_tip"><p>请使用微信扫描二维码登录“花礼网”</p></div><div class="status status_succ js_status" style="display:none" id="wx_after_scan"><i class="status_icon icon38_msg succ"></i><div class="status_txt"><h4>扫描成功</h4><p>请在微信中点击关注即可登录</p></div></div><div class="status status_fail js_status" style="display:none" id="wx_after_cancel"><i class="status_icon icon38_msg warn"></i><div class="status_txt"><h4>您已取消此次登录</h4><p>您可再次扫描登录，或关闭窗口</p></div></div></div></div></div></div>'
-  , area: ['350px', '410px']
-  , shadeClose: false
-  , closeBtn: 2
-  , cancel: function () { window.clearInterval(interval1); }
-            });
-            $("#wxLoginQR").attr("src", qrCodeUrl);
-            var counter1 = 600;;
-            var interval1 = window.setInterval(intervalFunc1, 5000);
-            function intervalFunc1() {
-                if (counter1 > 0) {
-                    counter1 -= 1;
-                    AjaxWxLogin();
-                }
-                else { window.clearInterval(interval1);}
-            }
-        }
-
-        function AjaxWxLogin()
-        {
-            var pid = "3eadd9119ae1423ba90c0b50c0176859";
-            var sj = "2018-4-26";
-            var sign = "a1aa8a0a3936a6b3";
-            $.ajax({
-                type: "POST", url: "/Passport/Login/WXLogin", data: { pid: pid,sj:sj,sign:sign }, timeout: 5000, dataType: 'json',
-                error: function(XMLHttpRequest, textStatus, errorThrown){console.log(errorThrown);}, 
-                success: function(data) {
-                    var retStatus=data.Status;
-                    if (retStatus == 0) {
-                        var backUrl = $("#backUrl").val();
-                        if (backUrl.length > 2) {
-                            location.href = backUrl;
-                        }
-                        else {
-                            location.href = "/Member/MemberCenter/";
-                        }
+                url: 'checkLoginByPhone',
+                type: 'post',
+                dataType: 'json',
+                data: $('#myForm2').serialize(),
+                success: function (msg) {
+                    if (msg.status == 1) {
+                        layer.msg(msg.data);
+                        if($('#identity').val()=="admin")
+                            window.setTimeout("window.location.href='../admin/home'", 1000);
+                        else
+                            window.setTimeout("window.location.href='index'", 1000);
+                    } else {
+                        layer.msg(msg.data);
                     }
                 }
-            });
+            })
         }
-        function encode64(pwd) {
-            // base64加密开始  
-            var keyStr = "ABCDEFGHIJKLMNOP" + "QRSTUVWXYZabcdef" + "ghijklmnopqrstuv"
-                    + "wxyz0123456789+/" + "=";
-            var output = "";
-            var chr1, chr2, chr3 = "";
-            var enc1, enc2, enc3, enc4 = "";
-            var i = 0;
-            do {
-                chr1 = pwd.charCodeAt(i++);
-                chr2 = pwd.charCodeAt(i++);
-                chr3 = pwd.charCodeAt(i++);
-                enc1 = chr1 >> 2;
-                enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
-                enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
-                enc4 = chr3 & 63;
-                if (isNaN(chr2)) {
-                    enc3 = enc4 = 64;
-                } else if (isNaN(chr3)) {
-                    enc4 = 64;
-                }
-                output = output + keyStr.charAt(enc1) + keyStr.charAt(enc2)
-                        + keyStr.charAt(enc3) + keyStr.charAt(enc4);
-                chr1 = chr2 = chr3 = "";
-                enc1 = enc2 = enc3 = enc4 = "";
-            } while (i < pwd.length);
 
-            return output;
-        }
+
     </script>
-
-
-        <script type="text/javascript" src="../assets/Scripts/statesandright.js"></script>
+    <script src="../assets/Scripts/jquery.js"></script>
+    <script type="text/javascript" src="../assets/Scripts/statesandright.js"></script>
     <script src="../assets/Scripts/layer.js"></script>
-    <script type="text/javascript">
-        var userId = 0;
-        function reqUrlParam(paras) {
-            var url = location.href;
-            var paraString = url.substring(url.indexOf("?") + 1, url.length).split("&");
-            var paraObj = {}
-            for (i = 0; j = paraString[i]; i++) {
-                paraObj[j.substring(0, j.indexOf("=")).toLowerCase()] = j.substring(j.indexOf("=") + 1, j.length);
-            }
-            var returnValue = paraObj[paras.toLowerCase()];
-            if (typeof (returnValue) == "undefined") {
-                return "";
-            } else {
-                return returnValue;
-            }
-        }
-        function setCurUrlClass() {
-            // css : class = "color_tj"
-            var pathname1 = window.location.pathname;
-            $("a[href='" + pathname1 + "'").addClass("color_tj");
-        }
-        if ($("#pjCount").length > 0) {
-            $.get("/productpj/GetPJCount", function (data) {
-                $("#pjCount").text(data);
-            });
-        }
-        $(function () {
-            $.get("/Home/GetLoginUserId", null, function (data) {
-                userId = data;
-            }, "json");
-        });
 
-        $("#kefu").click(function () {
-            $.post("/Home/ZhiChiCustomerLog", null, function (data) {
-                window.open('https://www.sobot.com/chat/pc/index.html?sysNum=d22b0bfa87fd42258397365c95bc5e08&partnerId=' + data + '', '在线客服', 'height=800,width=650,toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no');
-            });
-            
-        });
-        $("#kefu1").click(function () {
-            $.post("/Home/ZhiChiCustomerLog", null, function (data) {
-                window.open('https://www.sobot.com/chat/pc/index.html?sysNum=d22b0bfa87fd42258397365c95bc5e08&partnerId=' + data + '', '在线客服', 'height=800,width=650,toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no');
-            });
-            
-        });
-    </script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="../assets/Scripts/dcc02026fb994a3b8f91704cff5a6a0e.js"></script>
     <script>
@@ -916,11 +510,5 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
   gtag('config', 'UA-1701714-3');
     </script>
-    <!-- Google Tag Manager (noscript) -->
-    <noscript>
-        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KS4PTHC"
-                height="0" width="0" style="display:none;visibility:hidden"></iframe>
-    </noscript>
-    <!-- End Google Tag Manager (noscript) -->
 </body>
 </html>

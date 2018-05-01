@@ -8,8 +8,6 @@
     <meta name="keywords" content="中国鲜花礼品网,鲜花,鲜花网,鲜花快递,网上订花送花,中国鲜花网,鲜花礼品,网上订花,送花网站" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="renderer" content="webkit|ie-comp">
-    
-    <script type="text/javascript" src="../assets/Scripts/749f72a08ee9437d8ccfd302db0539d3.js"></script>
     <link rel="icon" href="/favicon.ico" mce_href="/favicon.ico" type="image/x-icon">
     
     <link type="text/css" rel="stylesheet" href="../assets/Css/common.css">
@@ -212,7 +210,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </div>
     </header>
     <!-- 头部 End -->
-    
 
 
 <div class="login-wrapper">
@@ -220,12 +217,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <div class="container">
         <div class="login-box">
             <ul class="login-tabs">
-                <li><a href="/Passport/Login/">登录</a></li>
+                <li><a href="login/">登录</a></li>
                 <li class="active"><a href="javascript:void(0)">注册</a></li>
             </ul>
             <!-- 登录/注册tab End -->
             <a href="javascript:void(0);" class="logMethod">使用手机号码注册</a><div style="clear:both;"></div>
-            <form action="/Passport/Register/" method="post" name="regForm" id="regForm">
+            <form id="regForm">
+                <input type="hidden" name="identity" value="${identity}">
                 <div class="tab-content">
                     <!-- 注册 -->
                     <div id="registerPane" class="tab-pane login-panel fade in active">
@@ -241,16 +239,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                         </div>
                         <div class="form-group verify">
                             <input type="hidden" name="action" value="reg">
-                            <input id="Validate_Code" name="Validate_Code" maxlength="4" type="text" class="form-control" placeholder="验证码">
-                            <a href="javascript:RefreshImage('imgCaptcha');"><img src="../assets/Picture/ba0ed95d7af9461fb457458be509d302.gif" id="imgCaptcha" height="25" width="100"></a>
-                            <a class="refresh" href="javascript:RefreshImage('imgCaptcha');">看不清,换一张</a>
+                            <input id="emailCode" name="emailCode" maxlength="4" type="text" class="form-control" placeholder="验证码">
+                            <a class="refresh" href="javascript:sendEmailCode();">获取验证码</a>
                         </div>
-                        <button class="btn btn-primary btn-lg btn-block" type="button" onClick="return Check_User_Login();">立即注册</button>
+                        <button class="btn btn-primary btn-lg btn-block" type="button" onClick="emailRegister()">立即注册</button>
                     </div>
                     <!-- 注册 End -->
                 </div>
             </form>
-            <form action="/Passport/Register/PhoneRegister" method="post" name="regForm2" id="regForm2" style="display:none;">
+            <form  id="regForm2" style="display:none;">
+                <input type="hidden" name="identity" value="${identity}">
                 <div class="tab-content">
                     <div id="phoneRegisterPane" class="tab-pane login-panel fade in active">
                         <div class="login-notice" id="phoneErr" style="display:none;"></div>
@@ -261,21 +259,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                         <div class="form-group">
                             <input name="phonePassWord" id="phonePassWord" type="password" class="form-control" placeholder="请输入密码" value="">
                         </div>
-                        <div class="form-group verify">
-                            <input type="hidden" name="action" value="reg">
-                            <input id="phoneLoginValidCode" name="phoneLoginValidCode" maxlength="4" type="text" class="form-control" placeholder="验证码" value="">
-                            <a href="javascript:RefreshImage('imgPhoneCaptcha');"><img src="../assets/Picture/ba0ed95d7af9461fb457458be509d302.gif" id="imgPhoneCaptcha" height="25" width="100"></a>
-                            <a class="refresh" href="javascript:RefreshImage('imgPhoneCaptcha');">看不清,换一张</a>
-                        </div>
                         <div class="form-group">
                             <label class="sr-only" for="">短信验证码</label>
                             <div class="input-group">
                                 <div class="SMScodes"><input name="phoneCode" id="phoneCode" maxlength="6" autocomplete="off" placeholder="短信验证码" type="text" disabled="disabled"></div>
-                                <button type="button" class="btnSend" id="getcode">获取验证码</button>
+                                <button type="button" class="btnSend" id="getcode" onclick="sendPhoneCode()">获取验证码</button>
                                 <button type="button" class="btnSend" id="prompt_info" style="display:none;"><span id="regetcode"></span>秒后重新发送</button>
                             </div>
                         </div>
-                        <button class="btn btn-primary btn-lg btn-block" type="button" id="btnPhoneRegister" name="btnPhoneRegister">立即注册</button>
+                        <button class="btn btn-primary btn-lg btn-block" type="button" id="btnPhoneRegister" onclick="phoneRegister()">立即注册</button>
                     </div>
                 </div>
             </form>
@@ -309,232 +301,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </footer>
     <!-- 通用尾部 End -->
     <!-- 弹出窗口-->
-    
+
     <!-- 弹出窗口end-->
     
-        <script type="text/javascript" src="../assets/Scripts/common.js"></script>
-    
+    <script type="text/javascript" src="../assets/Scripts/common.js"></script>
     <script src="../assets/Scripts/mailautocomplete.js"></script>
-    <script>
-        $(function () {
-            var errorInfo = $.trim($("#errorMsg").val());
-            if (errorInfo != "") {
-                if (errorInfo.indexOf("请登录") > -1) {
-                    alert(errorInfo);
-                    location.href = "/Passport/Login/?loginMail=";
-                }
-                else {
-                    alert(errorInfo);
-                }
-            }
-        });
-        function RefreshImage(valImageId) {
-            var objImage = document.getElementById(valImageId)
-            if (objImage == undefined) {
-                return;
-            }
-            var now = new Date();
-            objImage.src = '/Passport/Register/BaseImageValidCode?x=' + now.toUTCString();
-        }
-
-        $(window.parent.document).find("#attPage").load(function () {
-            var main = $(window.parent.document).find("#attPage");
-            var thisheight = $(document).height();
-            main.height(thisheight < 410 ? 410 : thisheight);
-        });
-
-        function Check_Reg() {
-            var checkOK = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-";
-            var checkStr = myform.UserName.value;
-            var allValid = true;
-            var validGroups = true;
-            for (i = 0; i < checkStr.length; i++) {
-                ch = checkStr.charAt(i);
-                for (j = 0; j < checkOK.length; j++)
-                    if (ch == checkOK.charAt(j))
-                        break;
-                if (j == checkOK.length) {
-                    allValid = false;
-                    break;
-                }
-            }
-            return allValid;
-        }
-
-        //检查EMAIL
-        function Check_Email() {
-            HideTips();
-            if (document.getElementById("Email").value.length < 1) {
-                ShowTips("请输入你的Email地址!");
-                return false;
-            } else if ((/^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/gi).test($("#Email").val()) == false) {
-                ShowTips("请输入有效的Email地址!");
-                return false;
-            }
-            else {
-                var ret = $.ajax(
-                    {
-                        url: "/Passport/Register/IsExistEmail?username=" + document.getElementById("Email").value,
-                        async: false
-                    }).responseText;
-                if (ret == 0) {
-                    ShowTips("对不起，该用户名已经被人占用!");
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        //检查密码
-        function ChangePassword() {
-            HideTips();
-            var pwd = document.getElementById("PassWord").value;
-            if (pwd == null || pwd.length < 6) {
-                ShowTips("此项为必填项，密码不能小于6位");
-                return false;
-            }
-            return true;
-        }
-        //检查重新输出密码
-        function Check_RePassWord() {
-            HideTips();
-            var PassWord = document.getElementById("PassWord");
-            var RexPassWord = document.getElementById("RexPassWord");
-            if ((RexPassWord.value == "") || (PassWord.value != RexPassWord.value)) {
-                ShowTips("两次输入密码不一致，请重新输入！");
-                return false;
-            } else {
-            }
-            return true;
-        }
-
-        //检查验证码
-        function CheckValidateCode() {
-            HideTips();
-            var Validate_Code = document.getElementById("Validate_Code");
-            if ((Validate_Code.value == "") || (Validate_Code.value.length < 4)) {
-                ShowTips("请输入正确的验证码");
-                return false;
-            }
-            //else{
-            //	    return xmlcheckeVCode00(Validate_Code.value);
-            //	}
-            return true;
-        }
-
-        //提交再次验证
-        function Check_User_Login() {
-            //	alert("Check_Email():"+Check_Email());
-            if (!Check_Email()) return false;
-            //	alert("ChangePassword():"+ChangePassword());
-            if (!ChangePassword()) return false;
-            //	alert("Check_RePassWord():"+Check_RePassWord());
-            if (!Check_RePassWord()) return false;
-            //	alert("CheckValidateCode():"+CheckValidateCode());
-            if (!CheckValidateCode()) return false;
-            $("#regForm").submit();
-        }
-
-        function ChangeImg1() {
-            $("#Img1").attr("src", "/Passport/Register/BaseImageValidCode?" + Math.random());
-        }
-        function ShowTips(nr) {
-            $("#Enr").html("<div class=\"notice-cont\"><span class=\"ico ico-notice\"></span>" + nr + "</div>");
-            $("#Enr").show();
-        }
-        function HideTips() {
-            $("#Enr").hide();
-        }
-    </script>
+    <script src="../assets/Scripts/jquery.js"></script>
+    <script src="../assets/Scripts/layer.js"></script>
+    <script type="text/javascript" src="../assets/Scripts/statesandright.js"></script>
     <script type="text/javascript">
-
-        function SetPlaceHolder(formid) {
-            var oForm1 = document.getElementById(formid);
-            var oForm1Inputs = oForm1.getElementsByTagName('input');
-            for (var i = 0; i < oForm1Inputs.length; i++) {
-                placeHolder(oForm1Inputs[i], true);
-            }
-        }
-
-
-        function placeHolder(obj, span) {
-            if (!obj.getAttribute('placeholder')) return;
-            var imitateMode = span === true ? true : false;
-            var supportPlaceholder = 'placeholder' in document.createElement('input');
-            if (!supportPlaceholder) {
-                var defaultValue = obj.getAttribute('placeholder');
-                if (!imitateMode) {
-                    obj.onfocus = function () {
-                        (obj.value == defaultValue) && (obj.value = '');
-                        obj.style.color = '';
-                    }
-                    obj.onblur = function () {
-                        if (obj.value == defaultValue) {
-                            obj.style.color = '';
-                        } else if (obj.value == '') {
-                            obj.value = defaultValue;
-                            obj.style.color = '#A6A6A6';
-                        }
-                    }
-                    obj.onblur();
-                } else {
-                    var placeHolderCont = document.createTextNode(defaultValue);
-                    var oWrapper = document.createElement('span');
-                    oWrapper.style.cssText = 'position:absolute; color:#A6A6A6; display:inline-block; overflow:hidden;';
-                    oWrapper.className = 'wrap-placeholder';
-                    oWrapper.style.fontFamily = getStyle(obj, 'fontFamily');
-                    oWrapper.style.fontSize = getStyle(obj, 'fontSize');
-                    oWrapper.style.marginLeft = parseInt(getStyle(obj, 'marginLeft')) ? parseInt(getStyle(obj, 'marginLeft')) + 3 + 'px' : 3 + 'px';
-                    oWrapper.style.marginTop = parseInt(getStyle(obj, 'marginTop')) ? getStyle(obj, 'marginTop') : 1 + 'px';
-                    oWrapper.style.paddingLeft = getStyle(obj, 'paddingLeft');
-                    oWrapper.style.width = obj.offsetWidth - parseInt(getStyle(obj, 'marginLeft')) + 'px';
-                    oWrapper.style.height = obj.offsetHeight + 'px';
-                    oWrapper.style.lineHeight = obj.nodeName.toLowerCase() == 'textarea' ? '' : obj.offsetHeight + 'px';
-                    oWrapper.appendChild(placeHolderCont);
-                    obj.parentNode.insertBefore(oWrapper, obj);
-                    oWrapper.onclick = function () {
-                        obj.focus();
-                    }
-
-                    if (typeof (obj.oninput) == 'object') {
-                        obj.addEventListener("input", changeHandler, false);
-                    } else {
-                        obj.onpropertychange = changeHandler;
-                    }
-                    function changeHandler() {
-                        oWrapper.style.display = obj.value != '' ? 'none' : 'inline-block';
-                    }
-
-                    function getStyle(obj, styleName) {
-                        var oStyle = null;
-                        if (obj.currentStyle)
-                            oStyle = obj.currentStyle[styleName];
-                        else if (window.getComputedStyle)
-                            oStyle = window.getComputedStyle(obj, null)[styleName];
-                        return oStyle;
-                    }
-                }
-            }
-        }
-        //回车键
-        document.onkeydown = function (event) {
-            var e = event || window.event || arguments.callee.caller.arguments[0];
-            if (e && e.keyCode == 13) {
-                var isFocus = $("#Email").is(":focus");
-                if (isFocus) {
-                    $("#PassWord").focus();
-                    return false;
-                }
-                else {
-                    Check_User_Login();
-                }
-            }
-        };
-        //********************手机号码注册********************
-        var interval = null;
-        var counter = 0;
+        //********************两种注册方式********************
         $(function () {
-            SetPlaceHolder("regForm");
             $("#regForm2").hide();
             $(".logMethod").click(function () {
                 if ($(this).text() == "使用邮箱注册") {
@@ -548,163 +325,113 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                     SetPlaceHolder("regForm2");
                 }
             });
-            $("#getcode").click(function () {
-                HidePhoneTips();
-                if (!check_Phone()) return false;
-                if (!check_PassWord()) return false;
-                if (!check_ValidateCode()) return false;
-                var phone = $("#phone").val();
-                var imgCode = $("#phoneLoginValidCode").val();
-                var data = { phone: phone, imgCode: imgCode };
-                $.ajax({
-                    type: "Post",
-                    url: "/Passport/Register/SendSmsVerificationCode",
-                    data: data,
-                    dataType: "json",
-                    async: false,
-                    success: function (data) {
-                        if (data.OK) {
-                            ShowPhoneTips("验证码已发送,请查收!");
-                            $("#phone").attr("disabled", "disabled");
-                            $("#phonePassWord").attr("disabled", "disabled");
-                            $("#phoneLoginValidCode").attr("disabled", "disabled");
-                            $("#getcode").hide();
-                            $("#regetcode").html("90");
-                            $("#prompt_info").show();
-                            $("#phoneCode").removeAttr("disabled");
-                            interval = window.setInterval(intervalFunc, 1000);
-
-                        } else if (data.Msg == "-1") {
-                            ShowPhoneTips("您输入的验证码不正确!");
-                            return false;
-                        }
-                        else {
-                            ShowPhoneTips("获取验证码失败!");
-                            return false;
-                        }
-                    }
-                });
-            });
         });
-        $("#btnPhoneRegister").click(function () {
-            $("#btnPhoneRegister").attr("disabled", "disabled");
-            HidePhoneTips();
-            if (!check_PassWord()) return false;
-            var phoneCode = $("#phoneCode").val().trim();
-            if (phoneCode == "" || phoneCode.length < 6) {
-                ShowPhoneTips("请输入您的短信验证码!");
-                return false;
+
+        function sendEmailCode() {
+            var email=$('#Email').val();
+            if(!email){
+                alert("请先输入你的邮箱!");
+                return;
             }
-            else {
-                var phone = $("#phone").val();
-                var password = $("#phonePassWord").val();
-                $.ajax({
-                    url: '/Passport/Register/SendPhoneValidCode',
-                    type: 'post',
-                    data: {
-                        phone: phone,
-                        password: password,
-                        phoneCode: phoneCode
-                    },
-                    datatype: 'json',
-                    async: false,//使用同步的方式,true為非同步方式
-                    success: function (data) {
-                        if (!data.OK) {
-                            ShowPhoneTips(data.Msg);
-                            return false;
-                        }
-                        else if (data.OK) {
-                            location.href = "/";
-                        }
-                    }
-                });
-            }
-            $("#btnPhoneRegister").removeAttr("disabled");
-        });
-            //手机号注册检测手机号
-            function check_Phone()
-            {
-                HidePhoneTips();
-                var phone = $("#phone").val().trim();
-                if (phone.length <= 0) {
-                    ShowPhoneTips("手机号不能为空，请您重新输入！");
-                    return false;
-                } else if (!(/^\s*1\d{10}\s*$/gi).test(phone)) {
-                    ShowPhoneTips("很抱歉!请输入有效的手机号！");
-                    return false;
+            $.post("/index/getEmailCode",{email: email},function (msg) {
+                if(msg.status==1){
+                    $("#Email").attr("readonly", "readonly");
                 }
-                else {
-                    var imgCode = $("#phoneLoginValidCode").val();
-                    if (imgCode.length <= 0)
-                    {
-                        ShowPhoneTips("很抱歉!请输入图形验证码！");
-                    }
-                    var ret = $.ajax(
-                        {
-                            url: "/Passport/Register/IsExistPhone?phone=" + phone + "&imgCode="+imgCode,
-                            async: false
-                        }).responseText;
-                    if (ret == 0) {
-                        ShowPhoneTips("该手机号已是会员，请使用<a href='/Passport/Login/?lw=yzm&phone=" + phone + "' style='text-decoration:underline'>手机验证码登陆>></a>");
-                        return false;
-                    }
-                    else if (ret == -1)
-                    {
-                        ShowPhoneTips("图形验证码不正确!");
-                        return false;
+                layer.msg(msg.data);
+            },'json')
+        }
+
+        function emailRegister() {
+            var email=$('#Email').val();
+            var password=$('#PassWord').val();
+            var rexPassword=$('#RexPassWord').val();
+            if(!email){
+                alert("请输入邮箱！");
+                return;
+            }
+            if(!password){
+                alert("请输入密码！");
+                return;
+            }
+
+            if(!rexPassword){
+                alert("请输入再次输入密码！");
+                return;
+            }
+            if(password!=rexPassword){
+                alert("两次输入的密码不一致!");
+                return;
+            }
+            if(!$('#emailCode').val()){
+                alert("请输入验证码！");
+                return;
+            }
+
+            $.ajax({
+                url: "registerByEmail",
+                type: 'post',
+                dataType: 'json',
+                data: $('#regForm').serialize(),
+                success: function (msg) {
+                    if (msg.status == 1) {
+                        layer.msg(msg.data);
+                        window.setTimeout("window.location.href='login'", 1000);
+                    } else {
+                        layer.msg(msg.data);
                     }
                 }
-                return true;
-            }
+            })
+        }
 
-            //手机号注册检测密码
-            function check_PassWord() {
-                HidePhoneTips();
-                var pwd = $("#phonePassWord").val().trim();
-                if (pwd == "" || pwd.length < 6) {
-                    ShowPhoneTips("请输入您的登录密码且密码不能小于6位!");
-                    return false;
+        function sendPhoneCode() {
+            var  phone=$('#phone').val();
+            if(!phone){
+                alert("请先输入你的手机号!");
+                return;
+            }
+            $.post("/index/getPhoneCodeOnRegister",{phone: phone},function (msg) {
+                if(msg.status==1){
+                    $("#phone").attr("readonly", "readonly");
+                    $("#phoneCode").removeAttr("disabled");
                 }
-                return true;
-            }
+                layer.msg(msg.data);
+            },'json')
+        }
 
-            //手机号注册检测验证码
-            function check_ValidateCode() {
-                HidePhoneTips();
-                var code = $("#phoneLoginValidCode").val().trim();
-                if ((code == "") || (code.length < 4)) {
-                    ShowPhoneTips("您输入的验证码不正确!");
-                    return false;
+        function phoneRegister() {
+            var  phone=$('#phone').val();
+            var phonePassWord=$('#phonePassWord').val();
+            var phoneCode=$('#phoneCode').val();
+            if(!phone){
+                alert("请输入手机号");
+                return;
+            }
+            if(!phonePassWord){
+                alert("请输入密码啊！");
+                return;
+            }
+            if(!phoneCode){
+                alert("请输入验证码！");
+                return;
+            }
+            $.ajax({
+                url: "registerByTel",
+                type: 'post',
+                dataType: 'json',
+                data: $('#regForm2').serialize(),
+                success: function (msg) {
+                    if (msg.status == 1) {
+                        layer.msg(msg.data);
+                        window.setTimeout("window.location.href='login'", 1000);
+                    } else {
+                        layer.msg(msg.data);
+                    }
                 }
-                return true;
-            }
-
-
-            function ShowPhoneTips(nr) {
-                $("#phoneErr").html("<div class=\"notice-cont\"><span class=\"ico ico-notice\"></span>" + nr + "</div>");
-                $("#phoneErr").show();
-            }
-            function HidePhoneTips() {
-                $("#phoneErr").hide();
-            }
-
-            function intervalFunc() {
-                if (counter > 90) {
-                    counter = 0;
-                    $("#regetcode").html("");
-                    $("#getcode").show();
-                    $("#prompt_info").hide();
-                    window.clearInterval(interval);
-                } else {
-                    $("#regetcode").html((90 - counter).toString());
-                }
-                counter = counter + 1;
-            }
+            })
+        }
 
      </script>
 
-        <script type="text/javascript" src="../assets/Scripts/statesandright.js"></script>
-    <script src="../assets/Scripts/layer.js"></script>
     <script type="text/javascript">
         var userId = 0;
         function reqUrlParam(paras) {
@@ -750,8 +477,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             
         });
     </script>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="../assets/Scripts/dcc02026fb994a3b8f91704cff5a6a0e.js"></script>
     <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}

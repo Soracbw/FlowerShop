@@ -3,8 +3,15 @@
 <mapper namespace="com.zy.customer.mapper.CustomerMapper">
     <!--mapper代理开发，这里的namespace的地址必须是所代理的接口的完整地址-->
 
-    <select id="getCustomerById" resultType="com.zy.customer.entity.Customer" parameterType="int">
-        SELECT * FROM customer WHERE id = #{id};
+    <select id="getCustomer" resultType="customer" parameterType="string">
+        SELECT * FROM customer WHERE tel = #{username} OR email = #{username}
     </select>
 
+    <select id="insertByEmail" parameterType="customer">
+        INSERT INTO customer (email,password) VALUES (#{email},#{password})
+    </select>
+
+    <select id="insertByTel" parameterType="customer">
+        INSERT INTO customer (tel,password) VALUES (#{tel},#{password})
+    </select>
 </mapper>
