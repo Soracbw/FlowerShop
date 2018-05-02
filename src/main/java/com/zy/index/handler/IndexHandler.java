@@ -57,32 +57,32 @@ public class IndexHandler {
     public String checkLogin(String identity, String UserName, String PassWord, HttpSession session) throws Exception {
         Map map = new HashMap();
         map.put("status", "0");
-        map.put("data", "登录失败");
+        map.put("data", "账号或密码错误!");
         if (identity.equals("customer")) {
             CustomerMapper customerMapper = (CustomerMapper) applicationContext.getBean("customerMapper");
             Customer customer = customerMapper.getCustomer(UserName);
-            if (customer.getPassword().equals(md5Password(PassWord))) {
+            if (customer!=null&&customer.getPassword().equals(md5Password(PassWord))) {
                 map.put("status", "1");
                 map.put("data", "用户登录成功！");
-                session.setAttribute("customer", customer.getName());
+                session.setAttribute("customer", customer);
             }
 
         } else if (identity.equals("seller")) {
             SellerMapper sellerMapper = (SellerMapper) applicationContext.getBean("sellerMapper");
             Seller seller = sellerMapper.getSeller(UserName);
-            if (seller.getPassword().equals(md5Password(PassWord))) {
+            if (seller!=null&&seller.getPassword().equals(md5Password(PassWord))) {
                 map.put("status", "1");
                 map.put("data", "商家登录成功！");
-                session.setAttribute("seller", seller.getName());
+                session.setAttribute("seller", seller);
             }
 
         } else {
             AdminMapper adminMapper = (AdminMapper) applicationContext.getBean("adminMapper");
             Admin admin = adminMapper.getAdmin(UserName);
-            if (admin.getPassword().equals(md5Password(PassWord))) {
+            if (admin!=null&&admin.getPassword().equals(md5Password(PassWord))) {
                 map.put("status", "1");
                 map.put("data", "管理员登录成功！");
-                session.setAttribute("admin", admin.getName());
+                session.setAttribute("admin", admin);
             }
         }
         JSONObject msg = JSONObject.fromObject(map);

@@ -154,48 +154,45 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
                     <c:if test="${sessionScope.seller==null}">
                     <c:if test="${sessionScope.customer!=null}">
-                        <a href="${pageContext.request.contextPath}/customer/home" rel="nofollow" id="btn-login">${sessionScope.customer}</a>
-                        <a href="logout?identity=customer" rel="nofollow" id="btn-login">注销</a>
+                        <a href="${pageContext.request.contextPath}/customer/home" rel="nofollow" id="btn-login">${sessionScope.customer.name}</a>
+                        <a href="${pageContext.request.contextPath}/index/logout?identity=customer" rel="nofollow" id="btn-login">注销</a>
                     </c:if>
                     <c:if test="${sessionScope.customer==null}">
-                        <a href="login?identity=customer" rel="nofollow" id="btn-login">你好，请登录</a><a href="register?identity=customer" rel="nofollow" id="btn-reg">注册</a>
+                        <a href="${pageContext.request.contextPath}/index/login?identity=customer" rel="nofollow" id="btn-login">你好，请登录</a><a href="${pageContext.request.contextPath}/index/register?identity=customer" rel="nofollow" id="btn-reg">注册</a>
                     </c:if>
                     </c:if>
 
                 </li>
                 <!--登陆状态信息显示end-->
                 <li class="site-nav-pipe">|</li>
-                <li class="menu">
-                    <a href="/help/ordercx/" rel="nofollow" target="_blank">订单查询</a>
-                </li>
-                <li class="site-nav-pipe">|</li>
                 <!--我的花礼信息显示start-->
                 <c:if test="${sessionScope.customer==null}">
                 <c:if test="${sessionScope.seller!=null}">
                     <li class="menu dropdown">
-                        <a href="${pageContext.request.contextPath}/seller/home" rel="nofollow">${sessionScope.seller}</a>
+                        <a href="${pageContext.request.contextPath}/seller/home" rel="nofollow">${sessionScope.seller.name}</a>
                     </li>
                     <li class="menu dropdown">
-                        <a href="logout?identity=seller" rel="nofollow">注销</a>
+                        <a href="${pageContext.request.contextPath}/index/logout?identity=seller" rel="nofollow">注销</a>
                     </li>
                 </c:if>
-                </c:if>
+
 
                 <c:if test="${sessionScope.seller==null}">
                 <li class="menu dropdown">
-                    <a href="login?identity=seller" rel="nofollow" >商家登录</a>
+                    <a href="${pageContext.request.contextPath}/index/login?identity=seller" rel="nofollow" >商家登录</a>
                 </li>
-                </c:if>
 
                 <li class="site-nav-pipe">|</li>
                 <li class="menu dropdown">
-                    <a href="register?identity=seller" rel="nofollow" data-hover="dropdown" data-delay="0" target="_blank">商家入驻</a>
-                </li><!--我的花礼信息显示end-->
-                <%--<li class="site-nav-pipe">|</li>--%>
+                    <a href="${pageContext.request.contextPath}/index/register?identity=seller" rel="nofollow" data-hover="dropdown" data-delay="0" target="_blank">商家入驻</a>
+                </li>
+                </c:if>
+                </c:if>
+
                 <li class="site-nav-pipe">|</li>
                 <!--购物车信息显示start-->
                 <li class="menu dropdown">
-                    <a href="/shopping/showcart/" data-hover="dropdown" data-delay="0" rel="nofollow" target="_blank"><span class="ico ico-cart"></span>购物车<span class="text-primary" id="gwcCount"></span><span class="glyphicon glyphicon-triangle-bottom"></span></a>
+                    <a href="" data-hover="dropdown" data-delay="0" rel="nofollow" target="_blank"><span class="ico ico-cart"></span>购物车<span class="text-primary" id="gwcCount"></span><span class="glyphicon glyphicon-triangle-bottom"></span></a>
                     <div class="dropdown-menu dropdown-cart" id="CartInfo"></div>
                 </li><!--购物车信息显示end-->
                 <li class="site-nav-pipe">|</li>
@@ -209,7 +206,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <!-- 头部 -->
     <header>
         <div class="logo">
-            <h1><a href="/" class="logo-bd">中国鲜花礼品网(花礼网)</a></h1>
+            <h1><a href="${pageContext.request.contextPath}/index/index" class="logo-bd">中国鲜花礼品网(花礼网)</a></h1>
             <i></i>
             
     <h2>中国鲜花礼品网 始于2005，简称花礼网</h2>

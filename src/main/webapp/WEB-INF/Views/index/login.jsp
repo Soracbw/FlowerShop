@@ -181,7 +181,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </head>
 <body class="home">
     <!-- 顶部导航 -->
-    
+
     <div class="site-nav">
         <div class="container">
 
@@ -207,33 +207,48 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <ul class="site-nav-r">
                 <!--登陆状态信息显示start-->
                 <li class="menu login" id="LoginInfo">
-                    <a href="/Passport/Login/" rel="nofollow" id="btn-login">你好，请登录</a><a href="/Passport/Register/" rel="nofollow" id="btn-reg">注册</a>
+
+                    <c:if test="${sessionScope.seller==null}">
+                        <c:if test="${sessionScope.customer!=null}">
+                            <a href="${pageContext.request.contextPath}/customer/home" rel="nofollow" id="btn-login">${sessionScope.customer.name}</a>
+                            <a href="${pageContext.request.contextPath}/index/logout?identity=customer" rel="nofollow" id="btn-login">注销</a>
+                        </c:if>
+                        <c:if test="${sessionScope.customer==null}">
+                            <a href="${pageContext.request.contextPath}/index/login?identity=customer" rel="nofollow" id="btn-login">你好，请登录</a><a href="${pageContext.request.contextPath}/index/register?identity=customer" rel="nofollow" id="btn-reg">注册</a>
+                        </c:if>
+                    </c:if>
+
                 </li>
                 <!--登陆状态信息显示end-->
                 <li class="site-nav-pipe">|</li>
-                <li class="menu">
-                    <a href="/help/ordercx/" rel="nofollow" target="_blank">订单查询</a>
-                </li>
-                <li class="site-nav-pipe">|</li>
                 <!--我的花礼信息显示start-->
-                <li class="menu dropdown">
-                    <a href="/member/" rel="nofollow" data-hover="dropdown" data-delay="0" target="_blank">我的花礼</a>
-                </li><!--我的花礼信息显示end-->
-                <li class="site-nav-pipe">|</li>
-                <li class="menu dropdown">
-                    <a href="/help/" data-hover="dropdown" data-delay="0" target="_blank">客户服务<span class="glyphicon glyphicon-triangle-bottom"></span></a>
-                    <div class="dropdown-menu dropdown-service">
-                        <a href="/member/payment/balancefill" target="_blank">在线付款</a>
-                        <a href="/help/" target="_blank">帮助中心</a>
-                        <a href="/help/afterservice.htm" target="_blank">售后服务</a>
-                        <a href="/help/sendRange.htm" target="_blank">配送范围</a>
-                        <a href="/chat/" target="_blank">留言反馈</a>
-                    </div>
-                </li>
+                <c:if test="${sessionScope.customer==null}">
+                    <c:if test="${sessionScope.seller!=null}">
+                        <li class="menu dropdown">
+                            <a href="${pageContext.request.contextPath}/seller/home" rel="nofollow">${sessionScope.seller.name}</a>
+                        </li>
+                        <li class="menu dropdown">
+                            <a href="${pageContext.request.contextPath}/index/logout?identity=seller" rel="nofollow">注销</a>
+                        </li>
+                    </c:if>
+
+
+                    <c:if test="${sessionScope.seller==null}">
+                        <li class="menu dropdown">
+                            <a href="${pageContext.request.contextPath}/index/login?identity=seller" rel="nofollow" >商家登录</a>
+                        </li>
+
+                        <li class="site-nav-pipe">|</li>
+                        <li class="menu dropdown">
+                            <a href="${pageContext.request.contextPath}/index/register?identity=seller" rel="nofollow" data-hover="dropdown" data-delay="0" target="_blank">商家入驻</a>
+                        </li>
+                    </c:if>
+                </c:if>
+
                 <li class="site-nav-pipe">|</li>
                 <!--购物车信息显示start-->
                 <li class="menu dropdown">
-                    <a href="/shopping/showcart/" data-hover="dropdown" data-delay="0" rel="nofollow" target="_blank"><span class="ico ico-cart"></span>购物车<span class="text-primary" id="gwcCount"></span><span class="glyphicon glyphicon-triangle-bottom"></span></a>
+                    <a href="" data-hover="dropdown" data-delay="0" rel="nofollow" target="_blank"><span class="ico ico-cart"></span>购物车<span class="text-primary" id="gwcCount"></span><span class="glyphicon glyphicon-triangle-bottom"></span></a>
                     <div class="dropdown-menu dropdown-cart" id="CartInfo"></div>
                 </li><!--购物车信息显示end-->
                 <li class="site-nav-pipe">|</li>
@@ -284,11 +299,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <!-- 登录/注册tab -->
             <ul class="login-tabs">
                 <li class="active"><a href="javascript:void(0)">登录</a></li>
-                <li><a href="/Passport/Register/">注册</a></li>
+                <li><a href="${pageContext.request.contextPath}/index/register">注册</a></li>
             </ul>
             <!-- 登录/注册tab End -->
             <a href="javascript:void(0);" class="logMethod">使用手机验证码登录</a><div style="clear:both;"></div>
-            <form name="myForm" id="myForm" action="/Passport/Login/" method="post" style="display:block;">
+            <form name="myForm" id="myForm"  style="display:block;">
                 <!--不同身份在不同数据库中查询-->
                 <input type="hidden" name="identity" value="${identity}">
                 <div class="tab-content">
@@ -320,7 +335,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                         <div class="checkbox">
                             <input type="hidden" name="DoIt" value="ok" />
                             <input type="hidden" id="backUrl" name="backUrl" value="/" />
-                            <a class="pull-right" href="/Member/Password/Forgot" target="_blank">忘记密码？</a>
+                            <a class="pull-right" href="" target="_blank">忘记密码？</a>
                         </div>
 
                         <button class="btn btn-primary btn-lg btn-block" type="button"  onclick="normalLogin()" id="dosubmit">登　录</button>
