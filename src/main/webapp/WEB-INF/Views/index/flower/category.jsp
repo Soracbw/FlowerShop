@@ -45,7 +45,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </head>
 <body class="flower">
     <!-- 顶部导航 -->
-    
+
     <div class="site-nav">
         <div class="container">
 
@@ -56,14 +56,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <li class="menu dropdown">
                     <a href="javascript:void(0)" data-hover="dropdown" data-delay="0"><span class="ico ico-weixin"></span>关注微信</a>
                     <div class="dropdown-menu dropdown-weixin">
-                        <img src="../../assets/Picture/wechat_qrcode.jpg" height="124" width="124">
+                        <img src="../assets/Picture/wechat_qrcode.jpg" height="124" width="124">
                         <p>扫码关注<br>回复"礼物" 更多惊喜！</p>
                     </div>
                 </li>
                 <li class="menu dropdown">
                     <a href="/mobile/" data-hover="dropdown" data-delay="0" target="_blank"><span class="ico ico-mobile"></span>花礼网app</a>
                     <div class="dropdown-menu dropdown-weixin">
-                        <img src="../../assets/Picture/app_qrcode.jpg" height="124" width="124">
+                        <img src="../assets/Picture/app_qrcode.jpg" height="124" width="124">
                         <p>新人专享100元APP礼包</p>
                     </div>
                 </li>
@@ -71,38 +71,53 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <ul class="site-nav-r">
                 <!--登陆状态信息显示start-->
                 <li class="menu login" id="LoginInfo">
-                    <a href="/Passport/Login/" rel="nofollow" id="btn-login">你好，请登录</a><a href="/Passport/Register/" rel="nofollow" id="btn-reg">注册</a>
+
+                    <c:if test="${sessionScope.seller==null}">
+                        <c:if test="${sessionScope.customer!=null}">
+                            <a href="${pageContext.request.contextPath}/customer/home" rel="nofollow" id="btn-login">${sessionScope.customer.name}</a>
+                            <a href="${pageContext.request.contextPath}/index/logout?identity=customer" rel="nofollow" id="btn-login">注销</a>
+                        </c:if>
+                        <c:if test="${sessionScope.customer==null}">
+                            <a href="${pageContext.request.contextPath}/index/login?identity=customer" rel="nofollow" id="btn-login">你好，请登录</a><a href="${pageContext.request.contextPath}/index/register?identity=customer" rel="nofollow" id="btn-reg">注册</a>
+                        </c:if>
+                    </c:if>
+
                 </li>
                 <!--登陆状态信息显示end-->
                 <li class="site-nav-pipe">|</li>
-                <li class="menu">
-                    <a href="/help/ordercx/" rel="nofollow" target="_blank">订单查询</a>
-                </li>
-                <li class="site-nav-pipe">|</li>
                 <!--我的花礼信息显示start-->
-                <li class="menu dropdown">
-                    <a href="/member/" rel="nofollow" data-hover="dropdown" data-delay="0" target="_blank">我的花礼</a>
-                </li><!--我的花礼信息显示end-->
-                <li class="site-nav-pipe">|</li>
-                <li class="menu dropdown">
-                    <a href="/help/" data-hover="dropdown" data-delay="0" target="_blank">客户服务<span class="glyphicon glyphicon-triangle-bottom"></span></a>
-                    <div class="dropdown-menu dropdown-service">
-                        <a href="/member/payment/balancefill" target="_blank">在线付款</a>
-                        <a href="/help/" target="_blank">帮助中心</a>
-                        <a href="/help/afterservice.htm" target="_blank">售后服务</a>
-                        <a href="/help/sendRange.htm" target="_blank">配送范围</a>
-                        <a href="/chat/" target="_blank">留言反馈</a>
-                    </div>
-                </li>
+                <c:if test="${sessionScope.customer==null}">
+                    <c:if test="${sessionScope.seller!=null}">
+                        <li class="menu dropdown">
+                            <a href="${pageContext.request.contextPath}/seller/home" rel="nofollow">${sessionScope.seller.name}</a>
+                        </li>
+                        <li class="menu dropdown">
+                            <a href="${pageContext.request.contextPath}/index/logout?identity=seller" rel="nofollow">注销</a>
+                        </li>
+                    </c:if>
+
+
+                    <c:if test="${sessionScope.seller==null}">
+                        <li class="menu dropdown">
+                            <a href="${pageContext.request.contextPath}/index/login?identity=seller" rel="nofollow" >商家登录</a>
+                        </li>
+
+                        <li class="site-nav-pipe">|</li>
+                        <li class="menu dropdown">
+                            <a href="${pageContext.request.contextPath}/index/register?identity=seller" rel="nofollow" data-hover="dropdown" data-delay="0" target="_blank">商家入驻</a>
+                        </li>
+                    </c:if>
+                </c:if>
+
                 <li class="site-nav-pipe">|</li>
                 <!--购物车信息显示start-->
                 <li class="menu dropdown">
-                    <a href="/shopping/showcart/" data-hover="dropdown" data-delay="0" rel="nofollow" target="_blank"><span class="ico ico-cart"></span>购物车<span class="text-primary" id="gwcCount"></span><span class="glyphicon glyphicon-triangle-bottom"></span></a>
+                    <a href="" data-hover="dropdown" data-delay="0" rel="nofollow" target="_blank"><span class="ico ico-cart"></span>购物车<span class="text-primary" id="gwcCount"></span><span class="glyphicon glyphicon-triangle-bottom"></span></a>
                     <div class="dropdown-menu dropdown-cart" id="CartInfo"></div>
                 </li><!--购物车信息显示end-->
                 <li class="site-nav-pipe">|</li>
                 <li class="menu slogan">
-                    中国鲜花礼品网-爱情鲜花
+                    中国鲜花礼品网:中国鲜花网领先品牌
                 </li>
             </ul>
         </div>

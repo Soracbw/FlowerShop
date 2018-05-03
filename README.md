@@ -13,7 +13,7 @@
 #### 数据库模型
 ![image](https://github.com/Mrzyang/FlowerShop/blob/master/src/main/webapp/assets/FSimg/FlowerShop.png)
 
-#### 项目预览：待续...
+#### 项目预览：时间不多了,因为生病，没什么进度，希望有同学一起合作开发...
 
 
     QQ:   846965599  欢迎交流技术

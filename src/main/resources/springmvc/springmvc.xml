@@ -21,4 +21,6 @@
     <!--配置默认的视图解析器，使其能够加载css和js等静态资源文件-->
     <mvc:default-servlet-handler/>
     <mvc:annotation-driven/>
+
+
 </beans>

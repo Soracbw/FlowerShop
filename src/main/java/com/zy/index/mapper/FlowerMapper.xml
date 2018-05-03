@@ -2,6 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.zy.index.mapper.FlowerMapper">
     <!--mapper代理开发，这里的namespace的地址必须是所代理的接口的完整地址-->
+    <select id="getTypes" resultType="com.zy.index.entity.Type">
+        SELECT * FROM  f_type
+    </select>
+
+    <select id="getUsages" resultType="com.zy.index.entity.Usage">
+        SELECT * FROM  f_usage
+    </select>
+
+    <select id="getMaterials" resultType="com.zy.index.entity.Material">
+        SELECT * FROM  f_material
+    </select>
+
+    <insert id="insertFlower" parameterType="Flower">
+        INSERT INTO flower values (null,#{name},#{description},#{detail},#{useage_id},#{material_id},#{type_id},#{seller_id},#{imgurl},#{price})
+    </insert>
 
 
 </mapper>

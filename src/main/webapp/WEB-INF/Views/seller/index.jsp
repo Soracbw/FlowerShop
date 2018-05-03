@@ -1,4 +1,5 @@
 <%@ page language="java" pageEncoding="utf-8" contentType="text/html;charset=UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,87 +11,87 @@
     <meta name="keywords" content="会员中心，鲜花速递">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="renderer" content="webkit|ie-comp">
-    
-    
-
-    
     <link rel="icon" href="index/favicon.ico" mce_href="/favicon.ico" type="image/x-icon">
-    
-    
-    
-    
-    
-    
-
-
-
     <!--[if lt IE 9]>
         <script src="//img02.hua.com/pc/assets/js/html5shiv.min.js"></script>
     <![endif]-->
-    <!-- Google Tag Manager -->
-    
-    <!-- End Google Tag Manager -->
-
 <link rel="stylesheet" type="text/css" href="../assets/Css/index.css" media="all">
 </head>
 <body class="home">
     <!-- 顶部导航 -->
-    
+
     <div class="site-nav">
         <div class="container">
 
             <ul class="site-nav-l">
                 <li class="menu">
-                    <a href="https://www.hua.com/" onclick="addfavorite();return false;"><span class="ico ico-star"></span>收藏鲜花网(hua.com)</a>
+                    <a href="/" onClick="addfavorite();return false;"><span class="ico ico-star"></span>收藏鲜花网(hua.com)</a>
                 </li>
                 <li class="menu dropdown">
-                    <a aria-expanded="false" href="javascript:void(0)" data-hover="dropdown" data-delay="0"><span class="ico ico-weixin"></span>关注微信</a>
+                    <a href="javascript:void(0)" data-hover="dropdown" data-delay="0"><span class="ico ico-weixin"></span>关注微信</a>
                     <div class="dropdown-menu dropdown-weixin">
-                        <img src="../assets/Images/wechat_qrcode.jpg" height="124" width="124">
+                        <img src="../assets/Picture/wechat_qrcode.jpg" height="124" width="124">
                         <p>扫码关注<br>回复"礼物" 更多惊喜！</p>
                     </div>
                 </li>
                 <li class="menu dropdown">
-                    <a href="https://www.hua.com/mobile/" data-hover="dropdown" data-delay="0" target="_top"><span class="ico ico-mobile"></span>花礼网app</a>
+                    <a href="/mobile/" data-hover="dropdown" data-delay="0" target="_blank"><span class="ico ico-mobile"></span>花礼网app</a>
                     <div class="dropdown-menu dropdown-weixin">
-                        <img src="../assets/Images/app_qrcode.jpg" height="124" width="124">
+                        <img src="../assets/Picture/app_qrcode.jpg" height="124" width="124">
                         <p>新人专享100元APP礼包</p>
                     </div>
                 </li>
             </ul>
             <ul class="site-nav-r">
                 <!--登陆状态信息显示start-->
-                <li class="menu login" id="LoginInfo"><a href="https://www.hua.com/Member/MemberCenter/" rel="nofollow">你好，张洋</a><a href="https://www.hua.com/Passport/Login/Loginout" title="退出">退出</a></li>
+                <li class="menu login" id="LoginInfo">
+
+                    <c:if test="${sessionScope.seller==null}">
+                        <c:if test="${sessionScope.customer!=null}">
+                            <a href="${pageContext.request.contextPath}/customer/home" rel="nofollow" id="btn-login">${sessionScope.customer.name}</a>
+                            <a href="${pageContext.request.contextPath}/index/logout?identity=customer" rel="nofollow" id="btn-login">注销</a>
+                        </c:if>
+                        <c:if test="${sessionScope.customer==null}">
+                            <a href="${pageContext.request.contextPath}/index/login?identity=customer" rel="nofollow" id="btn-login">你好，请登录</a><a href="${pageContext.request.contextPath}/index/register?identity=customer" rel="nofollow" id="btn-reg">注册</a>
+                        </c:if>
+                    </c:if>
+
+                </li>
                 <!--登陆状态信息显示end-->
                 <li class="site-nav-pipe">|</li>
-                <li class="menu">
-                    <a href="https://www.hua.com/help/ordercx/" rel="nofollow" target="_top">订单查询</a>
-                </li>
-                <li class="site-nav-pipe">|</li>
                 <!--我的花礼信息显示start-->
-                <li class="menu dropdown">
-                    <a href="https://www.hua.com/member/" rel="nofollow" data-hover="dropdown" data-delay="0" target="_top">我的花礼</a>
-                </li><!--我的花礼信息显示end-->
-                <li class="site-nav-pipe">|</li>
-                <li class="menu dropdown">
-                    <a href="https://www.hua.com/help/" data-hover="dropdown" data-delay="0" target="_top">客户服务<span class="glyphicon glyphicon-triangle-bottom"></span></a>
-                    <div class="dropdown-menu dropdown-service">
-                        <a href="https://www.hua.com/member/payment/balancefill" target="_top">在线付款</a>
-                        <a href="https://www.hua.com/help/" target="_top">帮助中心</a>
-                        <a href="https://www.hua.com/help/afterservice.htm" target="_top">售后服务</a>
-                        <a href="https://www.hua.com/help/sendRange.htm" target="_top">配送范围</a>
-                        <a href="https://www.hua.com/chat/" target="_top">留言反馈</a>
-                    </div>
-                </li>
+                <c:if test="${sessionScope.customer==null}">
+                    <c:if test="${sessionScope.seller!=null}">
+                        <li class="menu dropdown">
+                            <a href="${pageContext.request.contextPath}/seller/home" rel="nofollow">${sessionScope.seller.name}</a>
+                        </li>
+                        <li class="menu dropdown">
+                            <a href="${pageContext.request.contextPath}/index/logout?identity=seller" rel="nofollow">注销</a>
+                        </li>
+                    </c:if>
+
+
+                    <c:if test="${sessionScope.seller==null}">
+                        <li class="menu dropdown">
+                            <a href="${pageContext.request.contextPath}/index/login?identity=seller" rel="nofollow" >商家登录</a>
+                        </li>
+
+                        <li class="site-nav-pipe">|</li>
+                        <li class="menu dropdown">
+                            <a href="${pageContext.request.contextPath}/index/register?identity=seller" rel="nofollow" data-hover="dropdown" data-delay="0" target="_blank">商家入驻</a>
+                        </li>
+                    </c:if>
+                </c:if>
+
                 <li class="site-nav-pipe">|</li>
                 <!--购物车信息显示start-->
                 <li class="menu dropdown">
-                    <a href="https://www.hua.com/shopping/showcart/" data-hover="dropdown" data-delay="0" rel="nofollow" target="_top"><span class="ico ico-cart"></span>购物车<span class="text-primary" id="gwcCount">(0)</span><span class="glyphicon glyphicon-triangle-bottom"></span></a>
-                    <div class="dropdown-menu dropdown-cart" id="CartInfo"><div class="empty">您的购物车中没有商品，<a href="https://www.hua.com/">先去选购吧</a>！</div></div>
+                    <a href="" data-hover="dropdown" data-delay="0" rel="nofollow" target="_blank"><span class="ico ico-cart"></span>购物车<span class="text-primary" id="gwcCount"></span><span class="glyphicon glyphicon-triangle-bottom"></span></a>
+                    <div class="dropdown-menu dropdown-cart" id="CartInfo"></div>
                 </li><!--购物车信息显示end-->
                 <li class="site-nav-pipe">|</li>
                 <li class="menu slogan">
-                    中国鲜花礼品网: 会员中心
+                    中国鲜花礼品网:中国鲜花网领先品牌
                 </li>
             </ul>
         </div>
@@ -106,19 +107,6 @@
     
 
         </div>
-        <div class="search">
-            <form name="i_search" method="post" action="https://www.hua.com/search/">
-                <div class="input-group">
-                    <input value="" name="keyword" class="form-control" placeholder="商品关键词" type="text">
-                    <span class="input-group-btn">
-                        <button class="btn btn-primary" type="button" onclick="this.form.submit()">搜索</button>
-                    </span>
-                </div>
-            </form>
-            
-    
-
-        </div>
         <div class="service">
             <span class="ico ico-phone"></span>400-889-8188
             <a href="https://www.hua.com/chat/" target="_top"><span class="ico ico-headset"></span>在线客服</a>
@@ -129,67 +117,6 @@
 <!-- 导航 -->
 <nav class="common">
     <div class="container">
-        <div class="categorys dropdown">
-            <h3 aria-expanded="false" class="categorys-title" data-hover="dropdown" data-delay="0">
-                <a href="https://www.hua.com/all.html"><span class="pull-right glyphicon glyphicon-menu-down"></span>全部商品导购</a>
-            </h3>
-            <div class="dropdown-menu dropdown-cate">
-                <h4><a href="https://www.hua.com/flower/">鲜花</a></h4>
-                <ul class="cate-list list-inline">
-                    <li><a href="https://www.hua.com/aiqingxianhua/">爱情鲜花</a></li>
-                    <li><a href="https://www.hua.com/youqingxianhua/">友情鲜花</a></li>
-                    <li><a href="https://www.hua.com/shengriliwu/" target="_top">生日鲜花</a></li>
-                    <li><a href="https://www.hua.com/songzhangbeixianhua/">问候长辈</a></li>
-                    <li><a href="https://www.hua.com/zhufuqinghexianhua/">祝贺鲜花</a></li>
-                    <li><a href="https://www.hua.com/hunqingxianhua/">婚庆鲜花</a></li>
-                    <li><a href="https://www.hua.com/tanbingweiwenxianhua/">探病慰问</a></li>
-                    <li><a href="https://www.hua.com/daoqianxianhua/">道歉鲜花</a></li>
-                    <li><a href="https://www.hua.com/businessFlower/kaiyehualan/">开业花篮</a></li>
-                </ul>
-                <h4><a href="https://www.hua.com/yongshenghua/">永生花</a></h4>
-                <ul class="cate-list list-inline">
-                    <li><a href="https://www.hua.com/yongshenghua/yongshenghua_box.html">经典花盒</a></li>
-                    <li><a href="https://www.hua.com/yongshenghua/yongshenghua_large.html">巨型玫瑰</a></li>
-                    <li><a href="https://www.hua.com/yongshenghua/yongshenghua_lavender.html">薰衣草</a></li>
-                </ul>
-
-                <h4><a href="https://www.hua.com/cake/">蛋糕</a></h4>
-                <ul class="cate-list list-inline">
-                    <li><a href="https://www.hua.com/cake/ganso/">元祖</a></li>
-                    <li><a href="https://www.hua.com/cake/21cake/">廿一客蛋糕</a></li>
-                    <li><a href="https://www.hua.com/cake/lecake/">诺心蛋糕</a></li>
-                    <li><a href="https://www.hua.com/cake/incake/">INCAKE</a></li>
-                    <li><a href="https://www.hua.com/cake/beisike/">贝思客蛋糕</a></li>
-                    <li><a href="https://www.hua.com/cake/boncake/">BONCAKE蛋糕</a></li>
-                    <li><a href="https://www.hua.com/cake/mcake/">Mcake蛋糕</a></li>
-                    <li><a href="https://www.hua.com/cake/waffleboy/">窝夫小子</a></li>
-                    <li><a href="https://www.hua.com/cake/micamika/">米卡米卡</a></li>
-                    <li><a href="https://www.hua.com/cake/faxini/">法西妮蛋糕</a></li>
-                    <li><a href="https://www.hua.com/cake/xfxb/">幸福西饼</a></li>
-                    <li><a href="https://www.hua.com/cake/vcake/">Vcake蛋糕</a></li>
-                    <li><a href="https://www.hua.com/cake/yipinxuan/">一品轩</a></li>
-                    <li><a href="https://www.hua.com/cake/heartcheesecake/">心之和蛋糕</a></li>
-                    <li><a href="https://www.hua.com/cake/allcitycake/">全国品牌</a></li>
-                </ul>
-                <h4><a href="https://www.hua.com/gifts/">礼品</a></h4>
-                <ul class="cate-list list-inline">
-                    <li><a href="https://www.hua.com/livingflower/">泰国保鲜花</a></li>
-                    <li><a href="https://www.hua.com/gifts/goldenflower/">金箔花</a></li>
-                    <li><a href="https://www.hua.com/gifts/musicbox/">音乐盒</a></li>
-                    <li><a href="https://www.hua.com/gifts/crystallaser/">水晶内雕</a></li>
-                    <li><a href="https://www.hua.com/gifts/cosmeticmirror/">化妆镜</a></li>
-                    <li><a href="https://www.hua.com/gifts/kingking/">香薰系列</a></li>
-                    <li><a href="https://www.hua.com/toys/">品牌公仔</a></li>
-                    <li><a href="https://www.hua.com/gifts/bestlife/">音乐睡枕</a></li>
-                    <li><a href="https://www.hua.com/katonghuashu/">卡通花束</a></li>
-                </ul>
-                <h4><a href="https://www.hua.com/Plant/">绿植</a></h4>
-                <ul class="cate-list list-inline">
-                    <li><a href="https://www.hua.com/Plant/greenplant/">绿色植物</a></li>
-                    <li><a href="https://www.hua.com/Plant/potflower/">盆栽花卉</a></li>
-                </ul>
-            </div>
-        </div>
         <ul class="nav">
             <li><a href="https://www.hua.com/">首页</a></li>
             <li><a href="https://www.hua.com/flower/">鲜花</a></li>
@@ -218,50 +145,18 @@
                     </a>
                 </div>
                 <p>
-                    张洋<br>
+                    ${sessionScope.seller.name}<br>
                     <span class="ico ico-pthy"></span>
-普通会员                </p>
-            </div>
-            <div class="my-counts">
-                <a href="https://www.hua.com/member/order/?zt=1&amp;sj=0">
-                    <b><span class="ico ico-m-pay"></span></b>待付款  <span class="text-primary">2</span>
-                </a>
-
-                <a href="https://www.hua.com/member/order/?zt=3&amp;sj=0">
-                    <b><span class="ico ico-m-receive"></span></b>今日配送 <span class="">0</span>
-                </a>
-
-                <a href="https://www.hua.com/member/order/?zt=4&amp;sj=0">
-                    <b><span class="ico ico-m-comment"></span></b>待评价 <span class="">0</span>
-                </a>
+商家                </p>
             </div>
             <ul class="my-stuffs list-unstyled">
-                <li><a href="https://www.hua.com/member/payment/myvirtualaccount">余额: 0</a></li>
-                <li><a href="https://www.hua.com/member/payment/myscores">积分: 0</a></li>
-                <li><a href="https://www.hua.com/member/payment/mycoupon">优惠券: 0</a></li>
+                <li><a href="https://www.hua.com/member/payment/myvirtualaccount">余额: ${sessionScope.seller.money}</a></li>
             </ul>
 
             <div class="verify-mobile">
                     <p>
-                        您验证的手机：176*****371
+                        您验证的手机：${sessionScope.seller.tel}
                     </p>
-                    <a class="btn btn-primary btn-sm" href="https://www.hua.com/member/accountsetting/editphoneauth">修改 <span class="glyphicon glyphicon-chevron-right"></span></a>
-            </div>
-        </div>
-
-            <div class="how-vip">
-                <h3>如何成为VIP</h3>
-                <p>您在hua.com成功购物一次，送货完毕后系统将自动将您的会员级别升至VIP，享受鲜花最高9折优惠。<br>会员级别将在送货完毕后一个工作日内完成升级，重大节日（即情人节、母亲节、七夕节、圣诞节和春节）需二个工作日左右。</p>
-            </div>
-
-        <div class="member-panel">
-            <div class="hd">
-                <a href="https://www.hua.com/Member/Order/MyAttention">查看更多收藏 &gt;&gt; </a>
-                <h4>我的收藏</h4>
-            </div>
-            <div class="bd">
-
-                    <p align="center"></p><center><font color="red"><b>您好,您没有收藏的记录</b></font></center><p></p>
             </div>
         </div>
     </div>
@@ -272,49 +167,41 @@
                 <div class="hd"><b></b>会员中心</div>
                 <ul class="bd">
                     <li class="active" id="memberCenterItem"><a href="https://www.hua.com/Member/MemberCenter/" style="font-size: 12px;"><span class="ico ico-member1"></span>会员首页</a></li>
-                    <li>
-                        <span class="ico ico-member2"></span>订单信息
-                        <ul>
-                            <li id="myOrderItem"><a href="https://www.hua.com/Member/Order/">我的订单</a></li>
-                            <li id="cancelOrderItem"><a href="https://www.hua.com/Member/Order/?zt=-1">已取消订单</a></li>
-                            <li id="myEvaluationItem"><a href="https://www.hua.com/Member/Order/ReviewList">我的评价</a></li>
-                            <li id="myAttentionItem"><a href="https://www.hua.com/Member/Order/MyAttention">我的收藏</a></li>
 
+                    <li>
+                        <span class="ico ico-member5"></span>我的商品
+                        <ul>
+                            <li id=""><a href="${pageContext.request.contextPath}/seller/showAllFlowers">全部商品</a></li>
+                            <li id=""><a href="${pageContext.request.contextPath}/seller/addFlower">新货上架</a></li>
                         </ul>
                     </li>
                     <li>
-                        <span class="ico ico-member3"></span>积分管理
+                        <span class="ico ico-member2"></span>订单信息
                         <ul>
-                            <li id="myScoresItem"><a href="https://www.hua.com/Member/Payment/MyScores">我的积分</a></li>
-                            <li id="scoresExchangeItem"><a href="https://www.hua.com/Member/Payment/ScoresExchange">积分兑换</a></li>
+                            <li id="myOrderItem"><a href="${pageContext.request.contextPath}/seller/showOrders">已售订单</a></li>
+                            <li id="cancelOrderItem"><a href="">已取消订单</a></li>
                         </ul>
                     </li>
                     <li>
                         <span class="ico ico-member4"></span>账户设置
                         <ul>
-                            <li id="personInfoItem"><a href="https://www.hua.com/Member/AccountSetting/PersonInfoManage">个人信息</a></li>
-                            <li id="addressListItem"><a href="https://www.hua.com/Member/AccountSetting/AddressList">常用收货人</a></li>
-                            <li id="changePwdItem"><a href="https://www.hua.com/Member/AccountSetting/ChangePwd">修改密码</a></li>
-                            <li id="changeEmailItem"><a href="https://www.hua.com/Member/AccountSetting/ChangeEmail">修改登录名</a></li>
-
-                            <li id="remindItem"><a href="https://www.hua.com/Member/Remind/">生日/纪念日提醒</a></li>
-                            <li id="guanlian"><a href="https://www.hua.com/Member/AccountSetting/Bind">关联QQ/微信账号</a></li>
+                            <li id="personInfoItem"><a href="">个人信息</a></li>
+                            <li id="changePwdItem"><a href="">密码设置</a></li>
                         </ul>
                     </li>
                     <li>
                         <span class="ico ico-member5"></span>付款设置
                         <ul>
-                            <li id="myVirtualAccountItem"><a href="https://www.hua.com/Member/Payment/MyVirtualAccount">我的虚拟账户</a></li>
-                            <li id="myCouponItem"><a href="https://www.hua.com/Member/Payment/MyCoupon">我的优惠券</a></li>
-                            <li id="balanceFillItem"><a href="https://www.hua.com/Member/Payment/BalanceFill">在线补款</a></li>
+                            <li id="myVirtualAccountItem"><a href="">我的虚拟账户</a></li>
+                            <li id="myCouponItem"><a href="">账户提现</a></li>
                         </ul>
                     </li>
                     <li>
                         <span class="ico ico-member6"></span>客户服务
                         <ul>
-                            <li id="guestMessageItem"><a href="https://www.hua.com/Member/CustomerService/GuestMessage">客服留言</a></li>
-                            <li id="tsGuestMessageItem"><a href="https://www.hua.com/Member/CustomerService/GuestMessage?type=ts">投诉留言</a></li>
-                            <li id="chatItem"><a href="https://www.hua.com/Chat/">在线客服</a></li>
+                            <li id="guestMessageItem"><a href="">客服留言</a></li>
+                            <li id="tsGuestMessageItem"><a href="">投诉留言</a></li>
+                            <li id="chatItem"><a href="">在线客服</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -348,27 +235,6 @@
         <p><a href="https://www.hua.com/profile/ChinaFlowerAssociation.htm" rel="nofollow" target="_top" title="中国花卉协会会员">中国花卉协会会员</a> <a href="https://www.hua.com/profile/chinaECA.htm" rel="nofollow" target="_top">中国电子商务协会会员</a> ICP经营许可证：<a href="https://www.hua.com/profile/ICP.htm" rel="nofollow" target="_top">粤B2-20050744</a> <b>|</b> <a href="http://www.miibeian.gov.cn/" rel="nofollow" target="_top">粤ICP备09171662号</a> <span class="ico beian"></span>粤公网安备44030502000373号 Copyright © 2005-2018</p>
         <p> 花礼网 （中国鲜花礼品网） <a href="https://www.hua.com/">www.hua.com</a><span> 深圳市百易信息技术有限公司</span> 会员中心</p>
     </footer>
-    <!-- 通用尾部 End -->
-    <!-- 弹出窗口-->
-    
-    <!-- 弹出窗口end-->
-    
-        
-    
-    
-
-
-    
-
-        
-    
-    
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    
-    
-    <!-- Google Tag Manager (noscript) -->
-    
-    <!-- End Google Tag Manager (noscript) -->
 
 </body>
 </html>
